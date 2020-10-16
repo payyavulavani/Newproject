@@ -1,0 +1,91 @@
+<html>
+  <head>
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <style>
+    th{
+   cursor:pointer;
+ }
+  </style>
+
+  </head>
+ <body>
+  
+  <input id="myInput" type="text" placeholder="Search..">
+
+  <table id="d1"  border="1">
+     <thead>
+      <th> country name </th>
+      <th> capital </th>
+      <th> flag </th>
+     </thead>
+  </table>
+   <button onClick="abc()"> get list </button>
+  
+ <script>
+
+      function abc(){
+       var http= new XMLHttpRequest();
+       console.log("request status ::" , http.readyState , http.status , http.statusText);
+       http.onreadystatechange = function(){
+        if( http.readyState===4 ){
+         var x= JSON.parse(http.response);
+            genUI(x);
+ }
+  }
+       http.open("get" , "https://restcountries.eu/rest/v2/all" );
+       http.send();
+       console.log(http.response);      
+   }
+     
+     function genUI(countries){
+      countries.forEach(function(country,i){
+             var newtr= document.createElement("tr"); 
+             var td1 = document.createElement("td"); 
+             var td2 = document.createElement("td");
+             
+            var td3= document.createElement("img");
+            var td4 = document.createElement("td");
+              td1.innerHTML= country.name;
+              td2.innerHTML= country.capital;
+              td3.src = 'https://restcountries.eu/rest/v/all';
+
+              td4.innerHTML= country.src;
+              // td4.innerHTML = country.flag.src;
+             // td3.setAttribute("data-bg-image", country.flag);
+             
+            newtr.appendChild(td1);
+            newtr.appendChild(td2);
+            newtr.appendChild(td3);
+            document.getElementById("d1").appendChild(newtr);
+});
+
+}
+   // code for sorting table
+
+   const getCellValue = (tr, idx) => tr.children[idx].innerText || tr.children[idx].textContent;
+
+   const comparer = (idx, asc) => (a, b) => ((v1, v2) => 
+    v1 !== '' && v2 !== '' && !isNaN(v1) && !isNaN(v2) ? v1 - v2 : v1.toString().localeCompare(v2)
+    )(getCellValue(asc ? a : b, idx), getCellValue(asc ? b : a, idx));
+
+
+    document.querySelectorAll('th').forEach(th => th.addEventListener('click', (() => {
+    const table = th.closest('table');
+    Array.from(table.querySelectorAll('tr:nth-child(n+2)'))
+        .sort(comparer(Array.from(th.parentNode.children).indexOf(th), this.asc = !this.asc))
+        .forEach(tr => table.appendChild(tr) );
+  })));
+ 
+  $(document).ready(function(){
+  $("#myInput").on("keyup", function() {
+    var value = $(this).val().toLowerCase();
+    $("#d1 tr").filter(function() {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
+  });
+});
+
+
+ </script>
+ </body>
+ </html>

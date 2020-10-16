@@ -1,0 +1,33 @@
+<html>
+  
+<body>
+ <style>
+  #d1,#d2{
+      border:1px solid;
+      height:300px;
+      width:300px;
+      margin:10px;
+}
+.small{
+    height:10px;
+    width:4px;
+    background-color:red;
+}
+</style>
+    <div id="d1"  onmousemove="abc(event)"> </div>
+    <div id="d2"> </div>
+
+ <script>
+      function abc(e){
+        var ele= document.createElement("div");
+        ele.className="small";
+ 
+         ele.style.top=e.clientY;
+        ele.style.left=e.clientX;
+               ele.style.position="absolute";
+ 
+         document.getElementById("d1").appendChild(ele);
+               }
+</script>
+ </body>
+</html>
